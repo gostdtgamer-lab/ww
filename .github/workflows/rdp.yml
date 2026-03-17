@@ -21,4 +21,4 @@ jobs:
 
     - name: Start Tunnel
       run: |
-        ssh -p 443 -R0:localhost:3389 tcp@a.pinggy.io
+        ssh -tt -p 443 -R0:localhost:3389 tcp@a.pinggy.io
