@@ -21,9 +21,12 @@ jobs:
 
     - name: Download ngrok
       run: |
-        Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
-        Expand-Archive ngrok.zip
+        curl -L https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-stable-windows-amd64.zip -o ngrok.zip
 
-    - name: Start Tunnel
+    - name: Extract ngrok
       run: |
-        .\ngrok.exe tcp 3389
+        tar -xf ngrok.zip
+
+    - name: Start ngrok tunnel
+      run: |
+        ./ngrok.exe tcp 3389
