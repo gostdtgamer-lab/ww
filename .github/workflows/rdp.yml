@@ -19,14 +19,6 @@ jobs:
         reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
         Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
-    - name: Download ngrok
+    - name: Start Tunnel
       run: |
-        curl -L https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-stable-windows-amd64.zip -o ngrok.zip
-
-    - name: Extract ngrok
-      run: |
-        tar -xf ngrok.zip
-
-    - name: Start ngrok tunnel
-      run: |
-        ./ngrok.exe tcp 3389
+        ssh -p 443 -R0:localhost:3389 tcp@a.pinggy.io
