@@ -1,4 +1,4 @@
-name: Windows-RDP
+name: Windows-RDP-Tailscale
 
 on:
   workflow_dispatch:
@@ -19,6 +19,16 @@ jobs:
         reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
         Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
-    - name: Start Tunnel
-      run: |
-        ssh -tt -p 443 -R0:localhost:3389 tcp@a.pinggy.io
+    - name: Install Tailscale
+      run: choco install tailscale -y
+
+    - name: Start Tailscale
+      run: tailscale up --authkey $env:TAILSCALE_KEY
+      env:
+        TAILSCALE_KEY: ${{ secrets.TAILSCALE_KEY }}
+
+    - name: Show IP
+      run: tailscale ip -4
+
+    - name: Keep Runner Alive
+      run: Start-Sleep -Seconds 21600
