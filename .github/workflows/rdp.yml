@@ -25,13 +25,13 @@ jobs:
 
     - name: Start Tailscale
       run: |
-        tailscale up --authkey $env:TAILSCALE_KEY
+        & "C:\Program Files\Tailscale\tailscale.exe" up --authkey $env:TAILSCALE_KEY
       env:
         TAILSCALE_KEY: ${{ secrets.TAILSCALE_KEY }}
 
     - name: Show Tailscale IP
       run: |
-        tailscale ip -4
+        & "C:\Program Files\Tailscale\tailscale.exe" ip -4
 
     - name: Keep Runner Alive
       run: |
