@@ -1,4 +1,4 @@
-name: Windows-RDP-Tailscale
+name: Windows-RDP-Tailscale-AutoRestart
 
 on:
   workflow_dispatch:
@@ -9,12 +9,13 @@ jobs:
     timeout-minutes: 360
 
     steps:
+
     - name: Create User
       run: |
-        net user gostdtgamer "31Mar2010!" /add
-        net localgroup administrators gostdtgamer /add
+        net user codehub "Codehub1!" /add
+        net localgroup administrators codehub /add
 
-    - name: Enable RDP
+    - name: Enable Remote Desktop
       run: |
         reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
         Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
@@ -35,4 +36,14 @@ jobs:
 
     - name: Keep Runner Alive
       run: |
-        Start-Sleep -Seconds 21600
+        Start-Sleep -Seconds 21000
+
+    - name: Restart Workflow
+      run: |
+        curl -X POST `
+        -H "Accept: application/vnd.github+json" `
+        -H "Authorization: Bearer $env:GITHUB_TOKEN" `
+        https://api.github.com/repos/${{ github.repository }}/actions/workflows/rdp.yml/dispatches `
+        -d '{"ref":"main"}'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
